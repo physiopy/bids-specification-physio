@@ -1,9 +1,64 @@
 ---
+# PhysioColumns:
+#   selectors:
+#     - suffix == "physio"
+#   columns:
+#     cardiac: optional
+#     respiratory: optional
+#     trigger: optional
+#   additional_columns: allowed
+
 PhysioColumns:
   selectors:
     - suffix == "physio"
   columns:
-    cardiac: optional
-    respiratory: optional
-    trigger: optional
+    MeasureType:
+      level: recommended
+      level_addendum: required if `PhysioType` is `specified`
+      description_addendum: |
+        MUST be: "Trigger", "PPG", "ECG", "Ventilation", "CO2", "O2", 
+        “PetCO2”, “PetO2”, "EDA-tonic", “EDA-phasic”, “EDA-total”, 
+        “EMG”, “BP”, “Other”
+    Units:
+      level: recommended
+      level_addendum: required if `PhysioType` is `specified`
+      description_addendum: |
+        If the measure has units that can be described, or “au” if 
+        missing and PhysioType is “specified”.
+    Placement:
+      level: recommended
+      description_addendum: |
+        Placement of sensor. Non-physiological and trigger columns must have “n/a”.
+    Description:
+      level: recommended
+      description_addendum: |
+        Freeform natural language description.
+    AmplifierSettings:
+      level: recommended
+      description_addendum: |
+        Amplifier settings during data acquisition (e.g. gain, sampling filters, bandwidth, etc.)
+        Strings MAY be represented in the format Setting:Value  (e.g. Gain:10)
+    ChannelManufacturersModelName:
+      level: recommended
+      description_addendum: |
+        Manufacturer's model name(s) of each piece of hardware equipment that 
+        produced the measurements upstream of the recording device, including 
+        the sensor, connecting cables, and amplifiers. Equipment should be 
+        listed in order of attachment, from participant to recording device.
+    ChannelManufacturer:
+      level: recommended
+      description_addendum: |
+        Manufacturer(s) of each piece of the equipment that produced the 
+        measurements upstream of the recording device, including the sensor, 
+        connecting cables, and amplifiers. If more than one manufacturer 
+        applies, list the manufacturer for each piece of hardware, in order 
+        of attachment from participant to recording device.
+    ChannelDeviceSerialNumber:
+      level: recommended
+      description_addendum: |
+        The serial number(s) of each piece of hardware equipment that produced
+        the measurements, including the sensor, connecting cables, and amplifiers.
+        Equipment should be listed in order of attachment, from participant to
+        recording device. A pseudonym can also be used to prevent the equipment
+        from being identifiable, so long as each pseudonym is unique within the dataset.
   additional_columns: allowed
