@@ -13,5 +13,6 @@
         "Description": "ECG Recording",
         "Placement": "underneath the right clavicle, as well as the left and right costal margin",
         "Units": "mV"
-    }
+    },
+    "ConcurrenceGroup": "concurrence_group_1"
 }

@@ -13,5 +13,6 @@
         "SensorType": "Optoelectronic Sensor",
         "Placement": "Index and Middlefinger",
         "Units": "V"
-    }
+    },
+    "ConcurrenceGroup": "concurrence_group_1"
 }

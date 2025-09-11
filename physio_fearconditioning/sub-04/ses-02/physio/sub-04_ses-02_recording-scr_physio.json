@@ -14,6 +14,7 @@
         "SCRCouplerType": "Constant Voltage DC",
         "SCRCouplerVoltage": 0.5,
         "Placement": "thenar and hypothenar eminences of the palmar surface",
-        "Units": "μS"
-    }
+        "Units": "\u03bcS"
+    },
+    "ConcurrenceGroup": "concurrence_group_1"
 }

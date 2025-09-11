@@ -12,9 +12,20 @@
     "SampleCoordinateUnits": "pixel",
     "SamplingFrequency": 1000,
     "SoftwareVersion": "SREB1.10.1630 WIN32 LID:F2AE011 Mod:2017.04.21 15:19 CEST",
+    "PhysioType": "eyetrack",
     "pupil_size": {
         "Description": "Pupil diameter",
         "Units": "mm"
+    },
+    "x_coordinate": {
+        "LongName": "Gaze position (x)",
+        "Description": "Gaze position x-coordinate of the recorded eye, in the coordinate units specified in the corresponding metadata sidecar.",
+        "Units": "pixel"
+    },
+    "y_coordinate": {
+        "LongName": "Gaze position (y)",
+        "Description": "Gaze position y-coordinate of the recorded eye, in the coordinate units specified in the corresponding metadata sidecar.",
+        "Units": "pixel"
     },
     "MaximalCalibrationError": 0.7,
     "AverageCalibrationError": 0.32,
@@ -26,5 +37,6 @@
         "xmax": 1920.0,
         "ymax": 1080.0
     },
-    "RecordingDuration": 644.492
+    "RecordingDuration": 644.492,
+    "ConcurrenceGroup": "concurrence_group_1"
 }
