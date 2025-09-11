@@ -1,0 +1,17 @@
+{
+    "Columns": [
+        "ppg"
+    ],
+    "Manufacturer": "Biopac Systems",
+    "ManufacturersModelName": "PPG100C",
+    "DeviceSerialNumber": "",
+    "SamplingFrequency": 2000,
+    "SoftwareVersion": "Biopac AcqKnowledge 5.0.2",
+    "StartTime": 0,
+    "PhysioType": "specified",
+    "ppg": {
+        "SensorType": "Optoelectronic Sensor",
+        "Placement": "Index and Middlefinger",
+        "Units": "V"
+    }
+}

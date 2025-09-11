@@ -1,0 +1,17 @@
+{
+    "Columns": [
+        "ecg"
+    ],
+    "Manufacturer": "Biopac Systems",
+    "ManufacturersModelName": "ECG100C",
+    "DeviceSerialNumber": "1711008598",
+    "SamplingFrequency": 2000,
+    "SoftwareVersion": "Biopac AcqKnowledge 5.0.2",
+    "StartTime": 0,
+    "PhysioType": "specified",
+    "ecg": {
+        "Description": "ECG Recording",
+        "Placement": "underneath the right clavicle, as well as the left and right costal margin",
+        "Units": "mV"
+    }
+}

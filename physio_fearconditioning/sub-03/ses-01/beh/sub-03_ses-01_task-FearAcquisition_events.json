@@ -1,0 +1,43 @@
+{
+    "onset": {
+        "LongName": "Onset",
+        "Description": "Stimulus onset",
+        "Units": "second"
+    },
+    "duration": {
+        "LongName": "Duration",
+        "Description": "Stimulus duration",
+        "Units": "second"
+    },
+    "event_type": {
+        "LongName": "Event Type",
+        "Description": "Event type as defined in abstract terms",
+        "Levels": {
+            "CS+": "Conditioned stimulus coupled with US",
+            "CS-": "Conditioned stimulus never coupled with US",
+            "US": "Unconditioned stimulus",
+            "block_start": "Start of trial block",
+            "block_end": "End of trial block"
+        }
+    },
+    "stimulus_name": {
+        "LongName": "Identifier",
+        "Description": "Stimulus identifier",
+        "Levels": {
+            "diamond": "A diamond with 5 degrees visual angle",
+            "square": "A square with 5 degrees visual angle",
+            "shock": "An electric shock",
+            "block_start": "Start of trial block",
+            "block_end": "End of trial block"
+        }
+    },
+    "task_name": {
+        "LongName": "Name of the task",
+        "Description": "Name of the task",
+        "Levels": {
+            "habituation": "Fear habituation task",
+            "acquisition": "Fear acquisition task",
+            "extinction": "Fear extinction task"
+        }
+    }
+}

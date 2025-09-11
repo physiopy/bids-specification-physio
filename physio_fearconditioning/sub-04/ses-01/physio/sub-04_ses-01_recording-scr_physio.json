@@ -1,0 +1,19 @@
+{
+    "Columns": [
+        "scr"
+    ],
+    "Manufacturer": "Biopac Systems",
+    "ManufacturersModelName": "EDA100C/MEC100C",
+    "DeviceSerialNumber": "1711001172",
+    "SamplingFrequency": 2000,
+    "SoftwareVersion": "Biopac AcqKnowledge 5.0.2",
+    "StartTime": 0,
+    "PhysioType": "specified",
+    "scr": {
+        "Description": "SCR Recording",
+        "SCRCouplerType": "Constant Voltage DC",
+        "SCRCouplerVoltage": 0.5,
+        "Placement": "thenar and hypothenar eminences of the palmar surface",
+        "Units": "μS"
+    }
+}

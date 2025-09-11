@@ -1,0 +1,21 @@
+{
+  "TaskName": "Fear Extinction",
+  "TaskDescription": "Differential Fear Conditioning - Fear Extinction",
+  "Instructions": "<Task Instructions>",
+  "CogAtlasID": "https://www.cognitiveatlas.org/task/id/trm_5023ef8eab626/",
+  "CogPOID": "http://wiki.cogpo.org/index.php?title=Classical_Conditioning_Paradigm",
+  "InstitutionName": "Uni. Bonn",
+  "InstitutionAddress": "Bonn, Germany",
+  "SOA": 7.5,
+  "StimulusPresentation": {
+    "OperatingSystem": "Linux Ubuntu 18.04.5",
+    "SoftwareName": "Psychtoolbox",
+    "ScreenDistance": 0.5,
+    "ScreenRefreshRate": 144,
+    "ScreenResolution": [1920, 1080],
+    "ScreenSize": [0.569, 0.499],
+    "USElectrodeType": "surface bar electrodes consisting of two stainless steel disks of 9 mm diameter and 30 mm spacing",
+    "USElectrodeLocation": "forearm",
+    "USStimuator": "Digitimer 7A (Welwyn Garden City, UK)"
+  }
+}

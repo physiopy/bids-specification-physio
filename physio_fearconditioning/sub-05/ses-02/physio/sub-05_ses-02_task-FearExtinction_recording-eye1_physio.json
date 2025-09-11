@@ -1,0 +1,30 @@
+{
+    "Columns": [
+        "pupil_size",
+        "x_coordinate",
+        "y_coordinate"
+    ],
+    "EnvironmentCoordinates": "top-left",
+    "Manufacturer": "SR-Research",
+    "ManufacturersModelName": "EYELINK II CL v5.15 Jan 24 2018",
+    "RecordedEye": "left",
+    "SampleCoordinateSystem": "gaze-on-screen",
+    "SampleCoordinateUnits": "pixel",
+    "SamplingFrequency": 1000,
+    "SoftwareVersion": "SREB1.10.1630 WIN32 LID:F2AE011 Mod:2017.04.21 15:19 CEST",
+    "pupil_size": {
+        "Description": "Pupil diameter",
+        "Units": "mm"
+    },
+    "MaximalCalibrationError": 0.51,
+    "AverageCalibrationError": 0.29,
+    "EyeTrackerDistance": 0.55,
+    "PupilFitMethod": "ELLIPSE",
+    "GazeRange": {
+        "xmin": 0.0,
+        "ymin": 0.0,
+        "xmax": 1920.0,
+        "ymax": 1080.0
+    },
+    "RecordingDuration": 644.492
+}
