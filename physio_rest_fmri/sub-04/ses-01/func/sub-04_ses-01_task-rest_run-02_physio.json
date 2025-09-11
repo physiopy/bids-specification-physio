@@ -4,7 +4,7 @@
     "StartTime": 0,
     "Columns": ["Time", "Trigger", "PPG", "ECG-1", "ECG-2", "Ventilation", "EDA"],
     "PhysioType": "specified",
-    "AcquisitionObservations": "Moves hands a lot, used alcoholic hand-gel before session, drank coffee, electricity fault around minute 24",
+    "AcquisitionObservations": "Used alcoholic hand-gel before session, drank coffee",
     "SubjectPosition": "Supine",
     "SoftwareModels": "Acqknowledge",
     "SoftwareVersions": "5.0.4",
