@@ -1,6 +1,6 @@
 {
     "SamplingFrequency": 100.0,
-    "ConcurrentGroup": "concurrency_group8",
+    "ConcurrenceGroup": "concurrency_group8",
     "StartTime": 0,
     "Columns": ["Time", "Trigger", "PPG", "ECG-1", "ECG-2", "Ventilation", "EDA"],
     "PhysioType": "specified",

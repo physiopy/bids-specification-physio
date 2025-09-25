@@ -17,6 +17,6 @@
         1.08, 
         0.3925
     ],
-    "ConcurrentGroup": "concurrency_group20",
+    "ConcurrenceGroup": "concurrency_group20",
     "StartTime": 0
 }
