@@ -1,0 +1,9 @@
+{
+    "filename": {
+        "Description": "Relative path of the files"
+    },
+    "acq_time": {
+        "LongName": "Acquisition time",
+        "Description": "Acquisition time of the particular scan"
+    }
+}

@@ -1,0 +1,7 @@
+filename	acq_time
+eeg/sub-02_ses-02_task-rest_run-01_eeg.bdf	2025-09-25T10:45:03
+func/sub-02_ses-02_task-rest_run-01_bold.nii.gz	2025-09-25T10:45:12
+func/sub-02_ses-02_task-rest_run-01_physio.tsv.gz	2025-09-25T10:45:12
+eeg/sub-02_ses-02_task-rest_run-02_eeg.bdf	2025-09-25T11:45:03
+func/sub-02_ses-02_task-rest_run-02_bold.nii.gz	2025-09-25T11:45:12
+func/sub-02_ses-02_task-rest_run-02_physio.tsv.gz	2025-09-25T11:45:12
