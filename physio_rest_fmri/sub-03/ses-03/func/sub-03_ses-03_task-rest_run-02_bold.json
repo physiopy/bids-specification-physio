@@ -17,6 +17,6 @@
         1.08, 
         0.3925
     ],
-    "ConcurrenceGroup": "concurrency_group18",
+    "ConcurrenceGroup": "bids:physio_rest_fmri:sub-03/ses-03/func/sub-03_ses-03_task-rest_run-02_bold.nii.gz",
     "StartTime": 0
 }
