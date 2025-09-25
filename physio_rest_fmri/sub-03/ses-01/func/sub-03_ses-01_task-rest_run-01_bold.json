@@ -1,0 +1,22 @@
+{
+    "TaskName": "Rest",
+    "RepetitionTime": 3.0,
+    "Echotime": 0.017,
+    "SliceTiming": [
+        0,
+        0.59, 
+        1.3725, 
+        0.6875, 
+        0, 
+        0.785, 
+        0.1, 
+        0.8825, 
+        0.1975, 
+        0.98, 
+        0.295, 
+        1.08, 
+        0.3925
+    ],
+    "ConcurrentGroup": "concurrency_group13",
+    "StartTime": 0
+}
