@@ -33,62 +33,28 @@ Continuous:
   fields:
     SamplingFrequency:
       level: required
-      description_addendum: |
-        Sampling frequency (in Hz) of all the data in the recording, regardless of their type (for example, 2400).
     ConcurrenceGroup:
       level: optional
-      description_addendum: |
-        An identifier shared by files recorded concurrently. Each "ConcurrenceGroup" MUST be a unique string within 
-        one participant's tree, shared only by the continuously recorded data which was measured simultaneously.
     StartTime:
       level: required
-      description_addendum: |
-        Start time in seconds in relation to the start of acquisition of the first data sample in a reference file 
-        sharing the same “ConcurrenceGroup” identifier (negative values are allowed). Within each set of 
-        “ConcurrentWith” files, a reference file MUST be designated with a “StartTime” equaling 0. This data MAY be 
-        specified with sub-second precision using the syntax s[.000000], where s reflects whole seconds, and .000000 
-        reflects OPTIONAL fractional seconds. If no ConcurrentWith identifier is defined, the StartTime should be set 
-        to 0.
     Columns:
       level: required
-      description_addendum: |
-        Names of columns in file.
     PhysioType:
       level: recommended
-      description_addendum: |
-        Defines the specific type of physiological recording. For backwards compatibility, the default value is 
-        "generic". Must be: “generic”, “eyetracking”, “specified”.
     AcquisitionObservations:
       level: optional
-      description_addendum: |
-        General observations during the acquisition that might alter physiological fluctuations, their recording, 
-        or their QC/QA (e.g. subject moves hands often, or does not comply with instructions).
     SubjectPosition:
       level: recommended
-      description_addendum: |
-        Position of the subject during data acquisition. SHOULD be: “prone”, “supine”, “standing”, “sitting”, “reclined”
     SoftwareModels:
       level: recommended
-      description_addendum: |
-        Name of the software which recorded the measurements.
     SoftwareVersions:
       level: recommended
-      description_addendum: |
-        Manufacturer's designation of software version of the equipment that produced the measurements.
     ManufacturersModelName:
       level: recommended
-      description_addendum: |
-        Manufacturer's model name of the main equipment that recorded the measurements.
     Manufacturer:
       level: recommended
-      description_addendum: |
-        Manufacturer(s) of the main equipment that recorded the measurements.
     DeviceSerialNumber:
       level: optional
-      description_addendum: |
-        The serial number of the equipment that recorded the measurements, that is: the main recording device. A 
-        pseudonym can also be used to prevent the equipment from being identifiable, so long as each pseudonym is 
-        unique within the dataset.
 
 
         
