@@ -1,0 +1,13 @@
+{
+    "TaskName": "Rest",
+    "EEGReference": "left mastoid",
+    "SamplingFrequency": 250,
+    "PowerLineFrequency": 60,
+    "SoftwareFilters":{
+        "LowPassFilter": {
+            "cutoff": "350 (Hz)"
+        }
+    },
+    "ConcurrenceGroup": "bids:physio_rest_fmri:sub-02/ses-03/func/sub-02_ses-03_task-rest_run-01_bold.nii.gz",
+    "StartTime": -9.0001
+}
