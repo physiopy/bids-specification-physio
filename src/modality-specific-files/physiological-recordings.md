@@ -121,18 +121,18 @@ When specifying column names, columns **MUST** have unique names. All such data 
 
 ```json
 {
-  "Columns": ["screda1", "screda2", "ecg", "ppg"],
+  "Columns": ["src1", "src2", "ecg", "ppg"],
   "SamplingFrequency": 1000,
   "SubjectPosition": "sitting",
   "PhysioType": "specified",
   ...
-  "screda1": {
+  "src1": {
     "MeasureType": "EDA-phasic",
     "Units": "mS",
     "Placement": "Thenar",
     ...
   },
-  "screda2": {
+  "src2": {
     "MeasureType": "EDA-tonic",
     "Units": "mS",
     "Placement": "Hypothenar",
@@ -188,8 +188,6 @@ More information about the metadata entities contained in the JSON files can be 
 ---
 
 ### 2.1 Metadata fields used in top level metadata 
-
-We highlight in *italics* the changes from the current specification.
 
 {{ MACROS___make_sidecar_table(["continuous.Continuous"]) }}
 | Key name | Requirement level | Data type | Description |
