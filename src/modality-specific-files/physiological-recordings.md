@@ -16,22 +16,37 @@ An example of the physio directory structure is shown below:
    )
 }}
 
-```
-dataset/
-[...]
-sub-<label>/[ses-<label>/]
-physio/
-sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.json
-sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.tsv.gz
+{{ MACROS___make_filetree_example(
+   {
+   "dataset": {
+      [...]: {
+         "sub-<label>": {
+            "ses-<label>": {
+               "physio": {
+                  "sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.json": "",
+                  "sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.tsv.gz": "",
+               }
+            },
+         },
+      }
+   }
+) }}
 
-dataset/
-[...]
-sub-<label>/[ses-<label>/]
-func/
-   [...]
-<matches>_[recording-<label>]_physio.json
-<matches>_[recording-<label>]_physio.tsv.gz
-```
+{{ MACROS___make_filetree_example(
+   {
+   "dataset": {
+      [...]: {
+         "sub-<label>": {
+            "ses-<label>": {
+               "func": {
+                  "sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.json": "",
+                  "sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.tsv.gz": "",
+               }
+            },
+         },
+      }
+   }
+) }}
 
 When recording physiological data, we **RECOMMEND** to always record and save the data with the least amount of processing possible applied to it following this specification. If derivatives are computed in real time, we **RECOMMEND** to save them following the derivatives BEP, and to also store raw data following this concBEP.
 
@@ -67,21 +82,8 @@ We **RECOMMEND** to store trigger signals recorded alongside physiological chann
       }
    }
 ) }}
-```
-dataset/
-[...]
-sub-<label>/[ses-<label>/]
-physio/
-sub-001_ses-01_recording-scr_physio.json
-sub-001_ses-01_recording-scr_physio.tsv.gz
-sub-001_ses-01_recording-ecg_physio.json
-sub-001_ses-01_recording-ecg_physio.tsv.gz
-sub-001_ses-01_recording-resp_physio.json
-sub-001_ses-01_recording-resp_physio.tsv.gz
-```
 
 **Combining recorded data into one pair of physio data files**
-
 {{ MACROS___make_filetree_example(
    {
    "sub-001": {
@@ -94,14 +96,6 @@ sub-001_ses-01_recording-resp_physio.tsv.gz
       }
    }
 ) }}
-```
-dataset/
-[...]
-sub-<label>/[ses-<label>/]
-physio/
-sub-001_ses-01_physio.json
-sub-001_ses-01_physio.tsv.gz
-```
 
 It is possible that the `recording-<label>` entity uses terms that could be confused with metadata field values, such as `MeasurementType` or `SamplingFrequency`. In that case, the lowest metadata level available should always be interpreted as the most reliable information. For instance, if the file name contains `recording-1000hz` but the `SamplingFrequency` metadata indicates a sampling frequency of 100Hz, data **MUST** be interpreted as being sampled at 100 Hz. Similarly, if the entity `recording-ecg` is used, but the `MeasurementType` metadata of the contained columns indicate “ppg” and “Ventilation”, the data **MUST** be interpreted as PPG and Ventilation, and not ECG.
 
