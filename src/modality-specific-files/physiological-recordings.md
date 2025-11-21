@@ -19,12 +19,12 @@ An example of the physio directory structure is shown below:
 {{ MACROS___make_filetree_example(
    {
    "dataset": {
-      [...]: {
+      ...: {
          "sub-<label>": {
             "ses-<label>": {
                "physio": {
-                  "sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.json": "",
-                  "sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.tsv.gz": "",
+                  "sub-<label>_ses-<label>_task-<label>_recording-<label>_physio.json": "",
+                  "sub-<label>_ses-<label>_task-<label>_recording-<label>_physio.tsv.gz": "",
                }
             },
          },
@@ -35,12 +35,12 @@ An example of the physio directory structure is shown below:
 {{ MACROS___make_filetree_example(
    {
    "dataset": {
-      [...]: {
+      ...: {
          "sub-<label>": {
             "ses-<label>": {
                "func": {
-                  "sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.json": "",
-                  "sub-<label>[_ses-<label>]_task-<label>_[recording-<label>]_physio.tsv.gz": "",
+                  "sub-<label>_ses-<label>_task-<label>_recording-<label>_physio.json": "",
+                  "sub-<label>_ses-<label>_task-<label>_recording-<label>_physio.tsv.gz": "",
                }
             },
          },
@@ -84,6 +84,7 @@ We **RECOMMEND** to store trigger signals recorded alongside physiological chann
 ) }}
 
 **Combining recorded data into one pair of physio data files**
+
 {{ MACROS___make_filetree_example(
    {
    "sub-001": {
