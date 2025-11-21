@@ -185,15 +185,7 @@ More information about the metadata entities contained in the JSON files can be 
 ### 2.1 Metadata fields used in top level metadata 
 
 {{ MACROS___make_sidecar_table(["continuous.Continuous"]) }}
-| Key name | Requirement level | Data type | Description |
-|----------|----------|----------|----------|
-| Row 1-A  | Row 1-B  | Row 1-C  | Row 1-D  |
 
 ### 2.2 Metadata fields for column description
-
-{{ MACROS___make_columns_table("physio.PhysioColumns") }}
-| Key name | Requirement level | Data type | Description |
-|----------|----------|----------|----------|
-| Row 1-A  | Row 1-B  | Row 1-C  | Row 1-D  |
 
 ---
