@@ -4,22 +4,57 @@
 # Assumptions: never need disjunction of selectors
 # Assumptions: top-to-bottom overrides is sufficient logic
 
+# ---
+# # Metadata for either physio or stim files
+# Continuous:
+#   selectors:
+#     - intersects([suffix], ["physio", "stim"])
+#   fields:
+#     SamplingFrequency: required
+#     StartTime: required
+#     Columns: required
+
+# # Other recommended metadata for physiological data
+# PhysioHardware:
+#   selectors:
+#     - suffix == "physio"
+#   fields:
+#     Manufacturer: recommended
+#     ManufacturersModelName: recommended
+#     SoftwareVersions: recommended
+#     DeviceSerialNumber: recommended
+
 ---
-# Metadata for either physio or stim files
+# Required fields
 Continuous:
   selectors:
-    - intersects([suffix], ["physio", "stim"])
-  fields:
-    SamplingFrequency: required
-    StartTime: required
-    Columns: required
-
-# Other recommended metadata for physiological data
-PhysioHardware:
-  selectors:
+    - datatype == "physio"
     - suffix == "physio"
   fields:
-    Manufacturer: recommended
-    ManufacturersModelName: recommended
-    SoftwareVersions: recommended
-    DeviceSerialNumber: recommended
+    SamplingFrequency:
+      level: required
+    ConcurrenceGroup:
+      level: optional
+    StartTime:
+      level: required
+    Columns:
+      level: required
+    PhysioType:
+      level: recommended
+    AcquisitionObservations:
+      level: optional
+    SubjectPosition:
+      level: recommended
+    SoftwareModels:
+      level: recommended
+    SoftwareVersions:
+      level: recommended
+    ManufacturersModelName:
+      level: recommended
+    Manufacturer:
+      level: recommended
+    DeviceSerialNumber:
+      level: optional
+
+
+        

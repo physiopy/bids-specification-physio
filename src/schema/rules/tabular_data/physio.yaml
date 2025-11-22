@@ -1,9 +1,33 @@
 ---
+# PhysioColumns:
+#   selectors:
+#     - suffix == "physio"
+#   columns:
+#     cardiac: optional
+#     respiratory: optional
+#     trigger: optional
+#   additional_columns: allowed
+
 PhysioColumns:
   selectors:
     - suffix == "physio"
   columns:
-    cardiac: optional
-    respiratory: optional
-    trigger: optional
+    MeasureType:
+      level: recommended
+      level_addendum: required if `PhysioType` is `specified`
+    Units:
+      level: recommended
+      level_addendum: required if `PhysioType` is `specified`
+    Placement:
+      level: recommended
+    Description:
+      level: recommended
+    AmplifierSettings:
+      level: recommended
+    ChannelManufacturersModelName:
+      level: recommended
+    ChannelManufacturer:
+      level: recommended
+    ChannelDeviceSerialNumber:
+      level: recommended
   additional_columns: allowed
