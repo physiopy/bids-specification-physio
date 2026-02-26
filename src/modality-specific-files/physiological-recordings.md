@@ -9,13 +9,27 @@
       -   [`7t_trt`](https://github.com/bids-standard/bids-examples/tree/master/7t_trt)
       -   [`ds210`](https://github.com/bids-standard/bids-examples/tree/master/ds210)
 
+
+!!! warning "What constitutes raw physiological data (and what does not)"
+
+	Physiological monitoring is now advanced enough to offer a plethora of different data modalities,
+	some of which are directly measured and some of which are metrics computed using direct recordings.
+	To complicate the matter, certain devices allow analog signal processing operations.
+
+	Examples of directly measured physiological fluctuations include respiration, cardiac pulse, or eye-tracking.
+	Examples of computed metrics are heart rate, ...
+	Some modalities could be both, e.g. blood pressure directly measured vs computed from PPG signals.
+
+	In the following document, we broadly categorise any computed metric as non-raw data, although currently
+	there is no other specification to store such data differently. 
+
 ## General specifications
 
 When recording physiological data, we **RECOMMEND** to always record and
-save the data with the least amount of processing possible applied to it
-following this specification. If derivatives are computed in real time,
-we **RECOMMEND** to save them as physiological data derivatives, and to
-also store a rawest data format following the principles in this section.
+save the data with the least amount of processing possible applied to it.
+If metrics based on directly measured physiological fluctuations are computed
+in real time and stored by recording devices, we **RECOMMEND** to specify
+the nature of this metrics and to _also_ store the original physiological fluctuations when possible.
 
 
 Continuous (that is, regularly sampled over time at a fixed frequency)
