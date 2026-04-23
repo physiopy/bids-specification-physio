@@ -10,17 +10,17 @@
       -   [`ds210`](https://github.com/bids-standard/bids-examples/tree/master/ds210)
 
 
-!!! warning " 'Raw physiological data' vs 'Raw BIDS data'"
+!!! warning " 'Unprocessed/Processed physiological data' vs 'Raw/Derivatives BIDS data'"
 
 	Physiological monitoring is now advanced enough to offer a plethora of different data modalities,
-	some of which are directly measured and some of which are metrics computed using direct recordings.
+	some of which are directly measured unprocessed data, and some of which are processed metrics computed using direct recordings.
 	To complicate the matter, certain devices allow analog signal processing operations.
 
-	Examples of directly measured physiological fluctuations include respiration, cardiac pulse, or eye-tracking, while examples of computed metrics are heart rate or pulse rate. 
-	Some modalities could be both, e.g. blood pressure measured directly vs derived from PPG signals.
+	Examples of unprocessed physiological fluctuations include respiration, cardiac pulse, or eye-tracking, while examples of processed data are heart rate or pulse rate. 
+	Some modalities could be both, e.g. blood pressure measured directly (unprocessed) vs derived from PPG signals (processed).
 
 	In this specification, any data retrieved directly from a device is considered a raw signal, even if analogical signal processing is performed onto it, or it is the result of an algorithmic estimation.
-	Any data computed offline is considered derivative, and should follow derivatives
+	Any data computed offline is considered derivative, and should follow derivatives specifications.
 
 <!-- MODIFY This specification section first describes the organization of
 [continuous physiological recordings](), and
@@ -69,6 +69,7 @@ The sole exception is eye tracking data, that MUST be split in its own
 file, following [its specification](#eye-tracking).
 
 <!-- ISSUE this lines are now in direct contrast with the rest of the spec
+
 We RECOMMEND keeping different files from different recording
 devices separate, but for easier inspection and analysis they can kept together
 to get a clearer picture of what the fluctuations describe (e.g., looking 
