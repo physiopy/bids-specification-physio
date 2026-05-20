@@ -9,98 +9,93 @@
       -   [`7t_trt`](https://github.com/bids-standard/bids-examples/tree/master/7t_trt)
       -   [`ds210`](https://github.com/bids-standard/bids-examples/tree/master/ds210)
 
+
+!!! warning " 'Unprocessed/Processed physiological data' vs 'Raw/Derivatives BIDS data'"
+
+	Physiological monitoring is now advanced enough to offer a plethora of different data modalities,
+	some of which are directly measured unprocessed data, and some of which are processed metrics computed using direct recordings.
+	To complicate the matter, certain devices allow analog signal processing operations.
+
+	Examples of unprocessed physiological fluctuations include respiration, cardiac pulse, or eye-tracking, while examples of processed data are heart rate or pulse rate. 
+	Some modalities could be both, e.g. blood pressure measured directly (unprocessed) vs derived from PPG signals (processed).
+
+	In this specification, any data retrieved directly from a device is considered a raw signal, even if analogical signal processing is performed onto it, or it is the result of an algorithmic estimation.
+	Any data computed offline is considered derivative, and should follow derivatives specifications.
+
+<!-- MODIFY This specification section first describes the organization of
+[continuous physiological recordings](), and
+then [events corresponding to the physiological recordings](#physiology-events).
+Finally, the remainder of the document describes
+[specific types of continuous recordings](#specific-physiological-signal-types)
+such as [eye-tracking](#eye-tracking).
+This specification section covers three types of physiological recordings: [continuous](#continuous-physiological-recordings) (regularly sampled over time at a fixed frequency), semi-continuous (irregularly sampled, either with variable sampling frequency or in bursts of fixed sampling frequency), and asynchronous physiological events (sparse recordings, such as labels or events). -->
+
+The rest of this specification is organized as follows:
+1. General specifications for physiological recordings, including the organization of multiple physiological recordings and the handling of physiological recordings stored alongside concurrent modalities.
+2. [Continuous physiological recordings](#continuous-physiological-recordings), including [events corresponding to physiological recordings](#physiology-events).
+3. [Specific physiological signal types](#specific-physiological-signal-types), such as [eye-tracking](#eye-tracking).
+
+This specification section covers three types of physiological recordings: 
+- [continuous](#continuous-physiological-recordings): regularly sampled over time at a fixed frequency;
+- semi-continuous: irregularly sampled, either with variable sampling frequency or in bursts of fixed sampling frequency;
+- asynchronous physiological events: sparse recordings, such as labels or events.
+
 ## General specifications
 
-Continuous (that is, regularly sampled over time at a fixed frequency)
-physiological recordings such as cardiac and respiratory signals, and
-asynchronous events corresponding to those signals MAY be specified using
-[compressed tabular files](../common-principles.md#compressed-tabular-files)
-([TSV.GZ file](../glossary.md#tsvgz-extensions)).
-TSV.GZ files MUST be accompanied by a JSON file with the same name as their
-corresponding tabular file but with a `.json` extension.
+When recording physiological data, we RECOMMEND to always record and
+save the data with the least amount of (online) processing possible applied to it, would that be analogical or digital.
+If metrics based on directly measured physiological fluctuations are computed
+in real time and stored by recording devices, we RECOMMEND to specify
+the nature of this metrics and to _also_ store the original physiological fluctuations when possible.
 
-{{ MACROS___make_filename_template(
-       "raw",
-       placeholders=True,
-       show_entities=["recording"],
-       suffixes=["physio", "physioevents"]
-   )
-}}
+All physiological signals MAY be stored in their own data type folder `physio`, in which case they MUST follow the specifications reported below in [Enriched physiological data](###enriched-physiological-data). For backward compatibility, physiological signals recorded concurrently with other modalities (e.g. MRI, EEG, behavioural data, ...) MAY be stored either in their own data type folder, following the same specifications as independent data, or in the same data type folder as their concurrent modality data, in which case they MAY follow either generic or enriched specifications.
 
-The [`recording-<label>`](../appendices/entities.md#recording) entity is OPTIONAL,
-and is described in [Continuous physiological recordings](#continuous-physiological-recordings), below.
+Eye-tracking data MUST always follow [its specification](###eye-tracking).
+
+All these signals MAY be specified using [compressed tabular files](../common-principles.md#compressed-tabular-files) ([TSV.GZ file](../glossary.md#tsvgz-extensions)).
+TSV.GZ files MUST be accompanied by a JSON file with the same name as their corresponding tabular file but with a `.json` extension.
+
+<!-- ADD new example(s) of tsv.gz/json data -->
 
 !!! warning "Caution"
 
     Columns of TSV.GZ files MUST be defined in the corresponding JSON sidecar
     and the tabular content MUST NOT include a header line.
 
-    As a consequence, when supplying a `<matches>_<physio|physioevents>.tsv.gz` file,
+    As a consequence, when supplying a `[...]_<physio|physioevents>.tsv.gz` file,
     an accompanying `<matches>_<physio|physioevents>.json` MUST be supplied as well.
-
-For multi-echo data, a single `_physio.<tsv.gz|json>` file without the
-[`echo-<index>`](../appendices/entities.md#echo) entity applies to all echos of
-a particular run.
-For example:
-
-<!-- This block generates a file tree.
-A guide for using macros can be found at
- https://github.com/bids-standard/bids-specification/blob/master/macros_doc.md
--->
-{{ MACROS___make_filetree_example({
-  "sub-01": {
-    "func": {
-      "sub-01_task-nback_run-1_echo-1_bold.nii.gz": "",
-      "sub-01_task-nback_run-1_echo-2_bold.nii.gz": "",
-      "sub-01_task-nback_run-1_echo-3_bold.nii.gz": "",
-      "sub-01_task-nback_run-1_physio.tsv.gz": "",
-    },
-  },
-}) }}
-
-This specification section first describes the organization of
-[continuous physiological recordings](#continuous-physiological-recordings), and
-then [events corresponding to the physiological recordings](#physiology-events).
-Finally, the remainder of the document describes
-[specific types of continuous recordings](#specific-physiological-signal-types)
-such as [eye-tracking](#eye-tracking).
-
-## Continuous physiological recordings
-
-Continuous physiological recordings, such as pulse monitoring,
-electrocardiogram, respiratory movement measured with a respiration belt,
-gas concentration, or eye-tracking, MUST use `_physio.<tsv.gz|json>` pairs.
 
 ### Storing different recordings
 
-Recorded physio data **MUST** be split into separate data files in case of
+Recorded physio data MUST be split into separate data files in case of
 difference in top-level metadata like `SamplingFrequency`, `Software`, and
 `Manufacturer` of the main recording device (i.e., data source). These
-top-level metadata are discussed in the following section.
+top-level metadata are discussed in the following sections.
 
-Data with common top-level metadata **MAY** be kept aggregated in one file
+Data with common top-level metadata MAY be kept aggregated in one file
 otherwise, or split based on channel type, if preferred.
-The sole exception is eye tracking data, that **MUST** be split in its own
+The sole exception is eye tracking data, that MUST be split in its own
 file, following [its specification](#eye-tracking).
 
-We **RECOMMEND** keeping different files from different recording
+<!-- ISSUE this lines are now in direct contrast with the rest of the spec
+
+We RECOMMEND keeping different files from different recording
 devices separate, but for easier inspection and analysis they can kept together
 to get a clearer picture of what the fluctuations describe (e.g., looking 
-at ventilation and respiration together, or PPG and ECG for motion artifacts).
+at ventilation and respiration together, or PPG and ECG for motion artifacts). -->
 
-We **RECOMMEND** to store trigger signals recorded alongside physiological channels in the same file when concurrent modalities are collected (e.g. functional MRI or EEG).
+We RECOMMEND to store trigger signals recorded alongside physiological channels in a single file when concurrent modalities are collected (e.g. functional MRI or EEG).
 
 The [`recording-<label>`](../appendices/entities.md#recording)
-entity MAY be used to distinguish between several recording files.
+entity is an OPTIONAL entity that MAY be used to distinguish between several recording files.
 Recordings with different metadata such as sampling frequencies
 or recording device MUST be stored in separate files with different
-[`recording-<label>`](../appendices/entities.md#recording) entities.
-
-<!-- #!# There is a mention of `MeasurementType` that may be wrong --> 
-It is possible that the `recording-<label>` entity uses terms that could be confused with metadata field values, such as `MeasurementType` or `SamplingFrequency`. In that case, the lowest metadata level available should always be interpreted as the most reliable information. For instance, if the file name contains `recording-1000hz` but the `SamplingFrequency` metadata indicates a sampling frequency of 100Hz, data **MUST** be interpreted as being sampled at 100 Hz. Similarly, if the entity `recording-ecg` is used, but the `MeasurementType` metadata of the contained columns indicate “ppg” and “Ventilation”, the data **MUST** be interpreted as PPG and Ventilation, and not ECG.
+[`recording-<label>`](../appendices/entities.md#recording) entities. When physiological recordings are stored in their own `physio` modality, the allowed entities are: `sub`, `ses`, `task`, `acq`, `run`, `proc`, `split` and `recording`.
 
 
-<!-- #!# Conflict here -->
+It is possible that the `recording-<label>` entity uses terms that could be confused with metadata field values, such as `MeasureType` or `SamplingFrequency`. In that case, the lowest metadata level available should always be interpreted as the most reliable information. For instance, if the file name contains `recording-1000hz` but the `SamplingFrequency` metadata indicates a sampling frequency of 100Hz, data MUST be interpreted as being sampled at 100 Hz. Similarly, if the entity `recording-ecg` is used, but the `MeasureType` metadata of the contained columns indicate “ppg” and “Ventilation”, the data MUST be interpreted as PPG and Ventilation, and not ECG.
+
+<!-- ISSUE redundant/reposition?
 **For example:**
 
 **Splitting recorded data into separate physio data files**
@@ -151,7 +146,7 @@ It is possible that the `recording-<label>` entity uses terms that could be conf
    }
 }
 ) }}
-
+ -->
 
 For example, given a BOLD acquisition of a breath-holding task (`task-bht`)
 for which pulse and respiratory movement were sampled at different frequencies,
@@ -165,13 +160,52 @@ A guide for using macros can be found at
   "sub-01": {
     "func": {
       "sub-01_task-bht_bold.nii.gz": "",
-      "sub-01_task-bht_recording-cardiac_physio.json": "",
-      "sub-01_task-bht_recording-cardiac_physio.tsv.gz": "",
-      "sub-01_task-bht_recording-respiratory_physio.json": "",
-      "sub-01_task-bht_recording-respiratory_physio.tsv.gz": "",
+      "sub-01_task-bht_recording-pulse100Hz_physio.json": "",
+      "sub-01_task-bht_recording-pulse100Hz_physio.tsv.gz": "",
+      "sub-01_task-bht_recording-resp250Hz_physio.json": "",
+      "sub-01_task-bht_recording-resp250Hz_physio.tsv.gz": "",
     },
   },
 }) }}
+
+### Physiological files stored with concurrent modalities
+
+In case of concurrent data acquisition, physiological data MAY be stored in the concurrent data type folder, matching the concurrent data filename, that is `<matches>_<physio|physioevents>.tsv.gz` files:
+
+{{ MACROS___make_filename_template(
+       "raw",
+       placeholders=True,
+       show_entities=["recording"],
+       suffixes=["physio", "physioevents"]
+   )
+}}
+
+For multi-echo data, a single `_physio.<tsv.gz|json>` file without the
+[`echo-<index>`](../appendices/entities.md#echo) entity applies to all echoes of
+a particular run.
+For example:
+
+<!-- This block generates a file tree.
+A guide for using macros can be found at
+ https://github.com/bids-standard/bids-specification/blob/master/macros_doc.md
+-->
+{{ MACROS___make_filetree_example({
+  "sub-01": {
+    "func": {
+      "sub-01_task-nback_run-1_echo-1_bold.nii.gz": "",
+      "sub-01_task-nback_run-1_echo-2_bold.nii.gz": "",
+      "sub-01_task-nback_run-1_echo-3_bold.nii.gz": "",
+      "sub-01_task-nback_run-1_physio.tsv.gz": "",
+    },
+  },
+}) }}
+
+
+## Continuous physiological recordings
+
+Continuous physiological recordings, such as pulse monitoring,
+electrocardiogram, respiratory movement measured with a respiration belt,
+gas concentration, or eye-tracking, MUST use `_physio.<tsv.gz|json>` pairs.
 
 **Metadata fields for `<matches>_physio.json` files**.
 General metadata fields include `SamplingFrequency`, `StartTime`, `Columns`,
@@ -505,16 +539,16 @@ the `OnsetSource` is set to `"n/a"` in `sub-01_task-nback_physioevents.json`:
 
 ## Specific physiological signal types
 
-### Enriched physiological metadata
+### Enriched physiological data
 
 
 <!-- #!# This needs to be fixed -->
 
-**JSON Data files**. All metadata we are proposing are either **OPTIONAL** or **RECOMMENDED**, and they are meant to enrich the current `"generic"` `PhysioType`. However, we are also suggesting the introduction of a `"enriched"` `PhysioType`, that will differ from `"generic"` because one proposed metadata, `MeasureType`, will be **REQUIRED** rather than **RECOMMENDED**. Equally, the `Units` metadata will be **REQUIRED** instead of **RECOMMENDED** in this case.
+**JSON Data files**. All metadata we are proposing are either OPTIONAL or RECOMMENDED, and they are meant to enrich the current `"generic"` `PhysioType`. However, we are also suggesting the introduction of a `"enriched"` `PhysioType`, that will differ from `"generic"` because one proposed metadata, `MeasureType`, will be REQUIRED rather than RECOMMENDED. Equally, the `Units` metadata will be REQUIRED instead of RECOMMENDED in this case.
 
-Compared to the current BIDS specification (1.10.0), at the file level we are adding one metadata, the **OPTIONAL** `SubjectPosition`, indicating the position of the subject during the data collection (see below "Metadata fields used in top level metadata").
+Compared to the current BIDS specification (1.10.0), at the file level we are adding one metadata, the OPTIONAL `SubjectPosition`, indicating the position of the subject during the data collection (see below "Metadata fields used in top level metadata").
 
-When specifying column names, columns **MUST** have unique names. All such data columns **MUST** be appropriately defined in the JSON metadata.
+When specifying column names, columns MUST have unique names. All such data columns MUST be appropriately defined in the JSON metadata.
 
 **Example:**
 
@@ -549,32 +583,32 @@ When specifying column names, columns **MUST** have unique names. All such data 
 
 As described in the table below ("Metadata fields for column description."), this BEP is adding a few metadata to describe columns.
 
-- The most important one is `MeasureType`, a **RECOMMENDED** metadata that indicates the actual nature of the data in the column. 
-    - This metadata value is a string that **MUST** come from a set of keywords.
+- The most important one is `MeasureType`, a RECOMMENDED metadata that indicates the actual nature of the data in the column. 
+    - This metadata value is a string that MUST come from a set of keywords.
     - This set of keywords can be expanded in the future to include more physiological modalities. 
-    - When the file-level metadata `PhysioType` is `"enriched"`, `MeasureType` becomes a **REQUIRED** field for each column.
+    - When the file-level metadata `PhysioType` is `"enriched"`, `MeasureType` becomes a REQUIRED field for each column.
 
 This metadata is meant to be the most reliable indicator of the type of data contained in the described column. Having a reliable and standardized indication of what type of data is being handled allows automated modality specific data processing and prevents data misuse.
 
-Furthermore, we are proposing that `Units` becomes a **REQUIRED** metadata when `PhysioType` is `"enriched"`. Not only this helps to better reflect the possible quantitative nature of physiological data, but since similarly labelled data (e.g. Ventilation) can be expressed in different units, indicating different underlying processes, sensors, or levels of real-time preprocessing and data manipulation (e.g. transformation from Volts to millimeters of Mercury), making this field more explicit in the section regarding physiological data will help improve data interpretation. Specification of units **SHOULD** follow the International System of Units (see BIDS specification).
+Furthermore, we are proposing that `Units` becomes a REQUIRED metadata when `PhysioType` is `"enriched"`. Not only this helps to better reflect the possible quantitative nature of physiological data, but since similarly labelled data (e.g. Ventilation) can be expressed in different units, indicating different underlying processes, sensors, or levels of real-time preprocessing and data manipulation (e.g. transformation from Volts to millimeters of Mercury), making this field more explicit in the section regarding physiological data will help improve data interpretation. Specification of units SHOULD follow the International System of Units (see BIDS specification).
 
-We are also introducing a `Placement` **RECOMMENDED** metadata, that describes the position of the sensor during data collection. For instance, a file could have three columns of ventilation data, one collected at the navel, one at the diaphragm, and one at the armpit level, in which case `Placement` values would be “Navel”, “Diaphragm”, and “Armpit” respectively. In case the data describes gas concentration, such as CO2 or O2, `Placement` **SHOULD** be used to indicate if a “Nose” cannula versus a “Mouth” mouthpiece or a “Mask” was used.
+We are also introducing a `Placement` RECOMMENDED metadata, that describes the position of the sensor during data collection. For instance, a file could have three columns of ventilation data, one collected at the navel, one at the diaphragm, and one at the armpit level, in which case `Placement` values would be “Navel”, “Diaphragm”, and “Armpit” respectively. In case the data describes gas concentration, such as CO2 or O2, `Placement` SHOULD be used to indicate if a “Nose” cannula versus a “Mouth” mouthpiece or a “Mask” was used.
 
 The three metadata at this level describing hardware are:
 
-- `ChannelManufacturersModelName` (**RECOMMENDED**)
-- `ChannelManufacturers` (**RECOMMENDED**)
-- `ChannelDeviceSerialNumber` (**OPTIONAL**)
+- `ChannelManufacturersModelName` (RECOMMENDED)
+- `ChannelManufacturers` (RECOMMENDED)
+- `ChannelDeviceSerialNumber` (OPTIONAL)
 
 These metadata are meant to describe the nature of the equipment used to record data. Different components from different manufacturers could be used at the same time in a “patchwork” approach in which a sensor or amplifier from manufacturer A is connected to the recording device of manufacturer B, and even the same manufacturer could provide two or more options to measure the same type of data. Many setups that differ in this way introduce a potential difference in data processing (e.g. digital vs analogical lags, delays and sharpness of the recording, quantification, …).
 
-Thus, we **RECOMMEND** to increase the granularity of the setup description for each column, and we **RECOMMEND** to report names and manufacturers (when different from the main unit) of sensors, connective elements (e.g. cannulae or cables), and amplifiers. Serial numbers **MAY** be reported as well.
+Thus, we RECOMMEND to increase the granularity of the setup description for each column, and we RECOMMEND to report names and manufacturers (when different from the main unit) of sensors, connective elements (e.g. cannulae or cables), and amplifiers. Serial numbers MAY be reported as well.
 
 In this framework, it is crucial to distinguish between the different fields available for specifying recording equipment in the meta-data: at the top-level, the main recording device and software are characterized in meta-data fields such as `SoftwareModels` and `DeviceSerialNumber`, while at the column-level, information about channel-specific hardware is characterized in meta-data fields such as `ChannelDeviceSerialNumber`.
 
-We provide the example shown above to assist in determining the main recording device in common physiological acquisition set-ups. In the example shown above, three different recording systems are being used to concurrently acquire physiological data. The first system acquires two channels of physiological data with software A and main recording device ‘a’, which both would be specified using the top-level fields in the accompanying meta-data. Upstream, hardware such as amplifiers, filters, cables, and sensors would be specified using column-level fields specific to each channel in the accompanying meta-data. In the second system, one channel of physiological data is being acquired by main recording device ‘b’ and wirelessly transmitted to software B. In this case, the sensor attached to device ‘b’ can still be specified using column-level meta-data fields if it is an independent product. In the third system, data is acquired by a physiological monitoring unit which is integrated with an MRI scanner (device ‘c’), which itself acts as the main recording device. In case of using networked middleware systems such as the lab streaming layer, where the data may be centrally recorded, the central recording computer itself **MAY** be considered the main recording device.
+We provide the example shown above to assist in determining the main recording device in common physiological acquisition set-ups. In the example shown above, three different recording systems are being used to concurrently acquire physiological data. The first system acquires two channels of physiological data with software A and main recording device ‘a’, which both would be specified using the top-level fields in the accompanying meta-data. Upstream, hardware such as amplifiers, filters, cables, and sensors would be specified using column-level fields specific to each channel in the accompanying meta-data. In the second system, one channel of physiological data is being acquired by main recording device ‘b’ and wirelessly transmitted to software B. In this case, the sensor attached to device ‘b’ can still be specified using column-level meta-data fields if it is an independent product. In the third system, data is acquired by a physiological monitoring unit which is integrated with an MRI scanner (device ‘c’), which itself acts as the main recording device. In case of using networked middleware systems such as the lab streaming layer, where the data may be centrally recorded, the central recording computer itself MAY be considered the main recording device.
 
-Finally, the `AmplifierSettings` is a dictionary meant to be filled with potential amplifier settings that can manipulate the data collection at the source, e.g. low-pass filters or DC/AC currents. Because each amplifier and each manufacturer have different settings, we cannot define further the content of this dictionary, but we suggest using manufacturer specific pairs of keys and values. In this dictionary, we also **SUGGEST** reporting eventual data transformations (e.g. the exact formula used to transform gas pressure from measured Voltage to millimetres of Mercury).
+Finally, the `AmplifierSettings` is a dictionary meant to be filled with potential amplifier settings that can manipulate the data collection at the source, e.g. low-pass filters or DC/AC currents. Because each amplifier and each manufacturer have different settings, we cannot define further the content of this dictionary, but we suggest using manufacturer specific pairs of keys and values. In this dictionary, we also SUGGEST reporting eventual data transformations (e.g. the exact formula used to transform gas pressure from measured Voltage to millimetres of Mercury).
 
 More information about the metadata entities contained in the JSON files can be found in the tables below.
 
@@ -921,7 +955,7 @@ would read:
 
 #### 1.1 General principles
 
-The file and dataset naming conventions for physiological data follow the common principles of BIDS. When present, physiological recordings **SHOULD** be stored as compressed tabular files (`.tsv.gz` format) along with corresponding JSON files for storing metadata fields (see below).
+The file and dataset naming conventions for physiological data follow the common principles of BIDS. When present, physiological recordings SHOULD be stored as compressed tabular files (`.tsv.gz` format) along with corresponding JSON files for storing metadata fields (see below).
 
 An example of the physio directory structure is shown below:
 
@@ -963,19 +997,19 @@ An example of the physio directory structure is shown below:
 }
 ) }}
 
-When recording physiological data, we **RECOMMEND** to always record and save the data with the least amount of processing possible applied to it following this specification. If derivatives are computed in real time, we **RECOMMEND** to save them following the derivatives BEP, and to also store raw data following this concBEP.
+When recording physiological data, we RECOMMEND to always record and save the data with the least amount of processing possible applied to it following this specification. If derivatives are computed in real time, we RECOMMEND to save them following the derivatives BEP, and to also store raw data following this concBEP.
 
 #### 1.2 Splitting concurrently acquired data into multiple files
 
-Recorded physio data **MUST** be split into separate data files in case of difference in top-level metadata like `SamplingFrequency`, `Software`, and `Manufacturer` of the main recording device (i.e., data source). These top-level metadata are discussed in the following section.
+Recorded physio data MUST be split into separate data files in case of difference in top-level metadata like `SamplingFrequency`, `Software`, and `Manufacturer` of the main recording device (i.e., data source). These top-level metadata are discussed in the following section.
 
-Data with common top-level metadata **MAY** be kept aggregated in one file otherwise, or split based on channel type, if preferred. The sole exception is eye tracking data, that **MUST** be split in its own file, following BEP020 specifications.
+Data with common top-level metadata MAY be kept aggregated in one file otherwise, or split based on channel type, if preferred. The sole exception is eye tracking data, that MUST be split in its own file, following BEP020 specifications.
 
 We generally recommend keeping different files from different recording devices separate, but the option to keep data together acknowledges not only current standards in data collection, but also the fact that often physiological data is inspected and analysed together to get a clearer picture of what the fluctuations describe (e.g., looking at ventilation and respiration together, or PPG and ECG for motion artifacts).
 
 Moreover, the set of metadata we are proposing managed to consider most, if not all, possible channel types - with the exception of eye tracking. Thus, the choice to aggregate physiological data with common key metadata in a single file is left to user preference.
 
-We **RECOMMEND** to store trigger signals recorded alongside physiological channels in the same file when concurrent modalities are collected (e.g. functional MRI or EEG).
+We RECOMMEND to store trigger signals recorded alongside physiological channels in the same file when concurrent modalities are collected (e.g. functional MRI or EEG).
 
 **For example:**
 
@@ -1028,19 +1062,19 @@ We **RECOMMEND** to store trigger signals recorded alongside physiological chann
 }
 ) }}
 
-It is possible that the `recording-<label>` entity uses terms that could be confused with metadata field values, such as `MeasurementType` or `SamplingFrequency`. In that case, the lowest metadata level available should always be interpreted as the most reliable information. For instance, if the file name contains `recording-1000hz` but the `SamplingFrequency` metadata indicates a sampling frequency of 100Hz, data **MUST** be interpreted as being sampled at 100 Hz. Similarly, if the entity `recording-ecg` is used, but the `MeasurementType` metadata of the contained columns indicate “ppg” and “Ventilation”, the data **MUST** be interpreted as PPG and Ventilation, and not ECG.
+It is possible that the `recording-<label>` entity uses terms that could be confused with metadata field values, such as `MeasureType` or `SamplingFrequency`. In that case, the lowest metadata level available should always be interpreted as the most reliable information. For instance, if the file name contains `recording-1000hz` but the `SamplingFrequency` metadata indicates a sampling frequency of 100Hz, data MUST be interpreted as being sampled at 100 Hz. Similarly, if the entity `recording-ecg` is used, but the `MeasureType` metadata of the contained columns indicate “ppg” and “Ventilation”, the data MUST be interpreted as PPG and Ventilation, and not ECG.
 
 ---
 
 ### 2. JSON Data files
 
-Metadata sidecar files (`<matches>_physio.json`) **SHOULD** define the field `PhysioType`. This field indicates a specific type of formatting, rather than a physiological modality. The `PhysioType` `"generic"` value, being the default, **MUST** be assumed if the `PhysioType` metadata is not defined.
+Metadata sidecar files (`<matches>_physio.json`) SHOULD define the field `PhysioType`. This field indicates a specific type of formatting, rather than a physiological modality. The `PhysioType` `"generic"` value, being the default, MUST be assumed if the `PhysioType` metadata is not defined.
 
-All metadata we are proposing are either **OPTIONAL** or **RECOMMENDED**, and they are meant to enrich the current `"generic"` `PhysioType`. However, we are also suggesting the introduction of a `"specified"` `PhysioType`, that will differ from `"generic"` because one proposed metadata, `MeasureType`, will be **REQUIRED** rather than **RECOMMENDED**. Equally, the `Units` metadata will be **REQUIRED** instead of **RECOMMENDED** in this case.
+All metadata we are proposing are either OPTIONAL or RECOMMENDED, and they are meant to enrich the current `"generic"` `PhysioType`. However, we are also suggesting the introduction of a `"specified"` `PhysioType`, that will differ from `"generic"` because one proposed metadata, `MeasureType`, will be REQUIRED rather than RECOMMENDED. Equally, the `Units` metadata will be REQUIRED instead of RECOMMENDED in this case.
 
-Compared to the current BIDS specification (1.10.0), at the file level we are adding one metadata, the **OPTIONAL** `SubjectPosition`, indicating the position of the subject during the data collection (see section 2.1).
+Compared to the current BIDS specification (1.10.0), at the file level we are adding one metadata, the OPTIONAL `SubjectPosition`, indicating the position of the subject during the data collection (see section 2.1).
 
-When specifying column names, columns **MUST** have unique names. All such data columns **MUST** be appropriately defined in the JSON metadata.
+When specifying column names, columns MUST have unique names. All such data columns MUST be appropriately defined in the JSON metadata.
 
 **Example:**
 
@@ -1081,38 +1115,38 @@ When specifying column names, columns **MUST** have unique names. All such data 
 
 As described in the following table (Section 2.2), this BEP is adding a few metadata to describe columns.
 
-- The most important one is `MeasureType`, a **RECOMMENDED** metadata that indicates the actual nature of the data in the column. 
-    - This metadata value is a string that **MUST** come from a set of keywords (see table 2.2).
+- The most important one is `MeasureType`, a RECOMMENDED metadata that indicates the actual nature of the data in the column. 
+    - This metadata value is a string that MUST come from a set of keywords (see table 2.2).
     - This set of keywords can be expanded in the future to include more physiological modalities. 
-    - When the file-level metadata `PhysioType` is `"specified"`, `MeasureType` becomes a **REQUIRED** field for each column.
+    - When the file-level metadata `PhysioType` is `"specified"`, `MeasureType` becomes a REQUIRED field for each column.
 
 This metadata is meant to be the most reliable indicator of the type of data contained in the described column. Having a reliable and standardized indication of what type of data is being handled allows automated modality specific data processing and prevents data misuse.
 
-Furthermore, we are proposing that `Units` becomes a **REQUIRED** metadata when `PhysioType` is `"Specified"`. Not only this helps to better reflect the possible quantitative nature of physiological data, but since similarly labelled data (e.g. Ventilation) can be expressed in different units, indicating different underlying processes, sensors, or levels of real-time preprocessing and data manipulation (e.g. transformation from Volts to millimeters of Mercury), making this field more explicit in the section regarding physiological data will help improve data interpretation. Specification of units **SHOULD** follow the International System of Units (see BIDS specification).
+Furthermore, we are proposing that `Units` becomes a REQUIRED metadata when `PhysioType` is `"Specified"`. Not only this helps to better reflect the possible quantitative nature of physiological data, but since similarly labelled data (e.g. Ventilation) can be expressed in different units, indicating different underlying processes, sensors, or levels of real-time preprocessing and data manipulation (e.g. transformation from Volts to millimeters of Mercury), making this field more explicit in the section regarding physiological data will help improve data interpretation. Specification of units SHOULD follow the International System of Units (see BIDS specification).
 
-We are also introducing a `Placement` **RECOMMENDED** metadata, that describes the position of the sensor during data collection. For instance, a file could have three columns of ventilation data, one collected at the navel, one at the diaphragm, and one at the armpit level, in which case `Placement` values would be “Navel”, “Diaphragm”, and “Armpit” respectively. In case the data describes gas concentration, such as CO2 or O2, `Placement` **SHOULD** be used to indicate if a “Nose” cannula versus a “Mouth” mouthpiece or a “Mask” was used.
+We are also introducing a `Placement` RECOMMENDED metadata, that describes the position of the sensor during data collection. For instance, a file could have three columns of ventilation data, one collected at the navel, one at the diaphragm, and one at the armpit level, in which case `Placement` values would be “Navel”, “Diaphragm”, and “Armpit” respectively. In case the data describes gas concentration, such as CO2 or O2, `Placement` SHOULD be used to indicate if a “Nose” cannula versus a “Mouth” mouthpiece or a “Mask” was used.
 
 The three metadata at this level describing hardware are:
 
-- `ChannelManufacturersModelName` (**RECOMMENDED**)
-- `ChannelManufacturers` (**RECOMMENDED**)
-- `ChannelDeviceSerialNumber` (**OPTIONAL**)
+- `ChannelManufacturersModelName` (RECOMMENDED)
+- `ChannelManufacturers` (RECOMMENDED)
+- `ChannelDeviceSerialNumber` (OPTIONAL)
 
 These metadata are meant to describe the nature of the equipment used to record data. Different components from different manufacturers could be used at the same time in a “patchwork” approach in which a sensor or amplifier from manufacturer A is connected to the recording device of manufacturer B, and even the same manufacturer could provide two or more options to measure the same type of data. Many setups that differ in this way introduce a potential difference in data processing (e.g. digital vs analogical lags, delays and sharpness of the recording, quantification, …).
 
-Thus, we **RECOMMEND** to increase the granularity of the setup description for each column, and we **RECOMMEND** to report names and manufacturers (when different from the main unit) of sensors, connective elements (e.g. cannulae or cables), and amplifiers. Serial numbers **MAY** be reported as well.
+Thus, we RECOMMEND to increase the granularity of the setup description for each column, and we RECOMMEND to report names and manufacturers (when different from the main unit) of sensors, connective elements (e.g. cannulae or cables), and amplifiers. Serial numbers MAY be reported as well.
 
 In this framework, it is crucial to distinguish between the different fields available for specifying recording equipment in the meta-data: at the top-level, the main recording device and software are characterized in meta-data fields such as `SoftwareModels` and `DeviceSerialNumber`, while at the column-level, information about channel-specific hardware is characterized in meta-data fields such as `ChannelDeviceSerialNumber`.
 
-We provide the example shown above to assist in determining the main recording device in common physiological acquisition set-ups. In the example shown above, three different recording systems are being used to concurrently acquire physiological data. The first system acquires two channels of physiological data with software A and main recording device ‘a’, which both would be specified using the top-level fields in the accompanying meta-data. Upstream, hardware such as amplifiers, filters, cables, and sensors would be specified using column-level fields specific to each channel in the accompanying meta-data. In the second system, one channel of physiological data is being acquired by main recording device ‘b’ and wirelessly transmitted to software B. In this case, the sensor attached to device ‘b’ can still be specified using column-level meta-data fields if it is an independent product. In the third system, data is acquired by a physiological monitoring unit which is integrated with an MRI scanner (device ‘c’), which itself acts as the main recording device. In case of using networked middleware systems such as the lab streaming layer, where the data may be centrally recorded, the central recording computer itself **MAY** be considered the main recording device.
+We provide the example shown above to assist in determining the main recording device in common physiological acquisition set-ups. In the example shown above, three different recording systems are being used to concurrently acquire physiological data. The first system acquires two channels of physiological data with software A and main recording device ‘a’, which both would be specified using the top-level fields in the accompanying meta-data. Upstream, hardware such as amplifiers, filters, cables, and sensors would be specified using column-level fields specific to each channel in the accompanying meta-data. In the second system, one channel of physiological data is being acquired by main recording device ‘b’ and wirelessly transmitted to software B. In this case, the sensor attached to device ‘b’ can still be specified using column-level meta-data fields if it is an independent product. In the third system, data is acquired by a physiological monitoring unit which is integrated with an MRI scanner (device ‘c’), which itself acts as the main recording device. In case of using networked middleware systems such as the lab streaming layer, where the data may be centrally recorded, the central recording computer itself MAY be considered the main recording device.
 
-Finally, the `AmplifierSettings` is a dictionary meant to be filled with potential amplifier settings that can manipulate the data collection at the source, e.g. low-pass filters or DC/AC currents. Because each amplifier and each manufacturer have different settings, we cannot define further the content of this dictionary, but we suggest using manufacturer specific pairs of keys and values. In this dictionary, we also **SUGGEST** reporting eventual data transformations (e.g. the exact formula used to transform gas pressure from measured Voltage to millimetres of Mercury).
+Finally, the `AmplifierSettings` is a dictionary meant to be filled with potential amplifier settings that can manipulate the data collection at the source, e.g. low-pass filters or DC/AC currents. Because each amplifier and each manufacturer have different settings, we cannot define further the content of this dictionary, but we suggest using manufacturer specific pairs of keys and values. In this dictionary, we also SUGGEST reporting eventual data transformations (e.g. the exact formula used to transform gas pressure from measured Voltage to millimetres of Mercury).
 
 More information about the metadata entities contained in the JSON files can be found in the tables below.
 
 ---
 
-### 2.1 Metadata fields used in top level metadata 
+### 2.1 Metadata fields used in top level metadata
 
 {{ MACROS___make_sidecar_table(["continuous.Continuous"]) }}
 
