@@ -30,6 +30,12 @@ Finally, the remainder of the document describes
 such as [eye-tracking](#eye-tracking).
 This specification section covers three types of physiological recordings: [continuous](#continuous-physiological-recordings) (regularly sampled over time at a fixed frequency), semi-continuous (irregularly sampled, either with variable sampling frequency or in bursts of fixed sampling frequency), and asynchronous physiological events (sparse recordings, such as labels or events). -->
 
+This section first describes the organization of [continuous physiological recordings](#continuous-physiological-recordings), followed by [physiological events](#physiology-events). The remainder of the section describes [specific physiological signal types](#specific-physiological-signal-types), such as [eye-tracking](#eye-tracking).
+
+This specification covers three classes of physiological recordings:
+- [continuous physiological recordings](#continuous-physiological-recordings): regularly sampled time series acquired at a fixed sampling frequency;
+- semi-continuous physiological recordings: irregularly sampled recordings, including recordings acquired at variable sampling frequencies or in bursts of fixed-frequency sampling;
+- asynchronous physiological events: sparse event-based recordings, such as annotations, labels, or physiological events.
 
 ## General specifications
 
