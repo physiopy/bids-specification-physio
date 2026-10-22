@@ -179,11 +179,100 @@ In case of concurrent data acquisition, physiological data MAY be stored in the 
    )
 }}
 
+
+### Storing different recordings
+
+Recorded physio data **MUST** be split into separate data files in case of
+difference in top-level metadata like `SamplingFrequency`, `Software`, and
+`Manufacturer` of the main recording device (i.e., data source). These
+top-level metadata are discussed in the following section.
+
+Data with common top-level metadata **MAY** be kept aggregated in one file
+otherwise, or split based on channel type, if preferred.
+The sole exception is eye tracking data, that **MUST** be split in its own
+file, following [its specification](#eye-tracking).
+
+We **RECOMMEND** keeping different files from different recording
+devices separate, but for easier inspection and analysis they can kept together
+to get a clearer picture of what the fluctuations describe (e.g., looking 
+at ventilation and respiration together, or PPG and ECG for motion artifacts).
+
+We **RECOMMEND** to store trigger signals recorded alongside physiological channels in the same file when concurrent modalities are collected (e.g. functional MRI or EEG).
+
+The [`recording-<label>`](../appendices/entities.md#recording)
+entity MAY be used to distinguish between several recording files.
+Recordings with different metadata such as sampling frequencies
+or recording device MUST be stored in separate files with different
+[`recording-<label>`](../appendices/entities.md#recording) entities.
+
+<!-- #!# There is a mention of `MeasurementType` that may be wrong --> 
+It is possible that the `recording-<label>` entity uses terms that could be confused with metadata field values, such as `MeasurementType` or `SamplingFrequency`. In that case, the lowest metadata level available should always be interpreted as the most reliable information. For instance, if the file name contains `recording-1000hz` but the `SamplingFrequency` metadata indicates a sampling frequency of 100Hz, data **MUST** be interpreted as being sampled at 100 Hz. Similarly, if the entity `recording-ecg` is used, but the `MeasurementType` metadata of the contained columns indicate “ppg” and “Ventilation”, the data **MUST** be interpreted as PPG and Ventilation, and not ECG.
+
+
+<!-- #!# Conflict here -->
+**For example:**
+
+**Splitting recorded data into separate physio data files**
+
+{{ MACROS___make_filetree_example(
+   {
+   "sub-001": {
+      "ses-01": {
+         "physio": {
+            "sub-001_ses-01_recording-scr_physio.json": "",
+            "sub-001_ses-01_recording-scr_physio.tsv.gz": "",
+            "sub-001_ses-01_recording-ecg_physio.json": "",
+            "sub-001_ses-01_recording-ecg_physio.tsv.gz": "",
+            "sub-001_ses-01_recording-resp_physio.json": "",
+            "sub-001_ses-01_recording-resp_physio.tsv.gz": ""
+            },
+         },
+      }
+   }
+) }}
+
+**Combining recorded data into one pair of physio data files**
+
+{{ MACROS___make_filetree_example(
+   {
+   "sub-001": {
+      "ses-01": {
+         "physio": {
+            "sub-001_ses-01_physio.json": "",
+            "sub-001_ses-01_physio.tsv.gz": ""
+            },
+         },
+      }
+   }
+) }}
+
+{{ MACROS___make_filetree_example(
+{
+"dataset":{
+   "sub-<label>": {
+      "ses-<label>": {
+         "physio": {
+            "sub-001_ses-01_physio.json": "",
+            "sub-001_ses-01_physio.tsv.gz": "",
+            },
+         },
+      }
+   }
+}
+) }}
+
+
+For example, given a BOLD acquisition of a breath-holding task (`task-bht`)
+for which pulse and respiratory movement were sampled at different frequencies,
+recordings are separated as follows:
+
+<!-- MISSING -->
+  
+  
 For multi-echo data, a single `_physio.<tsv.gz|json>` file without the
 [`echo-<index>`](../appendices/entities.md#echo) entity applies to all echoes of
 a particular run.
 For example:
-
 <!-- This block generates a file tree.
 A guide for using macros can be found at
  https://github.com/bids-standard/bids-specification/blob/master/macros_doc.md
@@ -538,7 +627,7 @@ the `OnsetSource` is set to `"n/a"` in `sub-01_task-nback_physioevents.json`:
 
 ## Specific physiological signal types
 
-### Enriched physiological data
+### Enriched physiological metadata
 
 
 <!-- #!# This needs to be fixed -->
